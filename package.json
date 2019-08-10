@@ -1,16 +1,22 @@
 {
   "name": "routevalidator",
-  "version": "0.0.1",
-  "description": "Middleware which only allows configured urls and params to pass through otherwise throws error",
-  "main": "index.js",
+  "version": "0.0.2",
+  "description": "Express js Middleware which only allows configured urls and params to pass through otherwise throws error",
+  "main": "build/index.js",
   "scripts": {
-    "build": "babel src --plugins transform-es2015-modules-commonjs -d dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "babel lib --plugins transform-es2015-modules-commonjs -d build",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "url",
-    "validation"
+    "validation",
+    "route"
   ],
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/ahprasandh/routevalidator.git"
+  },
+  "homepage": "https://github.com/ahprasandh/routevalidator#readme",
   "author": "ahprasandh",
   "license": "MIT",
   "devDependencies": {
