@@ -1,0 +1,23 @@
+{
+  "name": "routevalidator",
+  "version": "0.0.1",
+  "description": "Middleware which only allows configured urls and params to pass through otherwise throws error",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel src --plugins transform-es2015-modules-commonjs -d dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "url",
+    "validation"
+  ],
+  "author": "ahprasandh",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.3.4",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2"
+  }
+}
