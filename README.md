@@ -2,7 +2,7 @@
 Express js Middleware which only allows configured urls and params to pass through and validates authentication otherwise throws error
 
 ## Usage
-1. Session validation - `require("routevalidator").sessionValidation({func(req)})` - pass a function to validate authentication to your app. When authentication is set as true in rule, this function will be invoked, must return true or false
+1. Session validation - `require("routevalidator").sessionValidation({func(req)})` - pass a function to validate authentication to your app. When authentication is set as true in rule, this function will be invoked req will be passed as a param, must return true or false
 2. URL validation - `require("routevalidator").initRules({securityRulesObj})` - pass **Security Rule** object (refer doc below)
 3. Add to express `router.use(require("routevalidator").routeValidator)` - pass **require("routevalidator").routeValidator** to express js router as a middleware
 
