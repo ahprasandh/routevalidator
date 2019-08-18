@@ -1,10 +1,10 @@
 {
   "name": "routevalidator",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Express js Middleware which only allows configured urls and params to pass through otherwise throws error",
-  "main": "rv.min.js",
+  "main": "build/index.js",
   "scripts": {
-    "build": "babel lib --out-file rv.min.js --plugins transform-es2015-modules-commonjs",
+    "build": "babel lib --plugins transform-es2015-modules-commonjs -d build",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
