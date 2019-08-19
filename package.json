@@ -1,6 +1,6 @@
 {
   "name": "routevalidator",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Express js Middleware which only allows configured urls and params to pass through otherwise throws error",
   "main": "build/index.js",
   "scripts": {
