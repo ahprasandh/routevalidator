@@ -4,18 +4,17 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.routeValidator = routeValidator;
-exports.initSessionVariables = initSessionVariables;
+exports.sessionValidation = sessionValidation;
 exports.initRules = initRules;
 
 var _SecurityError = require("./SecurityError");
 
-var _SecurityError2 = _interopRequireDefault(_SecurityError);
+var _SecurityError3 = _interopRequireDefault(_SecurityError);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 let securityRules = null;
-let sessionKey = "";
-let sessionVariable = "";
+let sessionValidationFunction = null;
 
 const hasRuleConfigured = wrapper => {
   return new Promise((resolve, reject) => {
@@ -36,7 +35,7 @@ const hasRuleConfigured = wrapper => {
       wrapper.rule = matchedRule;
       resolve(wrapper);
     } else {
-      reject(new _SecurityError2.default("RV_URL_404", {
+      reject(new _SecurityError3.default("RV_URL_404", {
         url: wrapper.req.originalUrl
       }));
     }
@@ -53,7 +52,7 @@ const checkParamPattern = wrapper => {
 
     for (var param in reqParams) {
       if (!methodRule.params[param]) {
-        return Promise.reject(new _SecurityError2.default("RV_PARAM_4006", {
+        return Promise.reject(new _SecurityError3.default("RV_PARAM_4006", {
           param: param,
           value: reqParams[param]
         }));
@@ -64,7 +63,7 @@ const checkParamPattern = wrapper => {
       var configuration = methodRule.params[param];
 
       if (configuration.mandatory && !reqParams[param]) {
-        return Promise.reject(new _SecurityError2.default("RV_PARAM_4002", {
+        return Promise.reject(new _SecurityError3.default("RV_PARAM_4002", {
           param: param
         }));
       }
@@ -73,21 +72,21 @@ const checkParamPattern = wrapper => {
         var paramValue = reqParams[param];
 
         if (configuration.minLength && paramValue.length < configuration.minLength) {
-          return Promise.reject(new _SecurityError2.default("RV_PARAM_4004", {
+          return Promise.reject(new _SecurityError3.default("RV_PARAM_4004", {
             param: param,
             length: configuration.minLength
           }));
         }
 
         if (configuration.maxLength && paramValue.length > configuration.maxLength) {
-          return Promise.reject(new _SecurityError2.default("RV_PARAM_4003", {
+          return Promise.reject(new _SecurityError3.default("RV_PARAM_4003", {
             param: param,
             length: configuration.maxLength
           }));
         }
 
         if (configuration.regex && !new RegExp("^" + configuration.regex + "$").test(paramValue)) {
-          return Promise.reject(new _SecurityError2.default("RV_PARAM_4005", {
+          return Promise.reject(new _SecurityError3.default("RV_PARAM_4005", {
             param: param,
             value: paramValue,
             regex: configuration.regex
@@ -103,16 +102,17 @@ const checkParamPattern = wrapper => {
 const checkAuthentication = wrapper => {
   let rule = wrapper.rule;
   let req = wrapper.req;
-
-  if (rule.authentication) {
-    if (req.session[sessionVariable] && req.cookies[sessionKey]) {
-      return Promise.resolve(wrapper);
+  return new Promise((resolve, reject) => {
+    if (rule.authentication) {
+      sessionValidationFunction(req).then(wrapper => {
+        resolve(wrapper);
+      }).catch(() => {
+        reject(new _SecurityError2.default("RV_AUTH_401"));
+      });
     } else {
-      return Promise.reject(new _SecurityError2.default("RV_AUTH_401"));
+      resolve(wrapper);
     }
-  } else {
-    return Promise.resolve(wrapper);
-  }
+  });
 };
 
 function routeValidator(req, res, next) {
@@ -129,9 +129,8 @@ function routeValidator(req, res, next) {
 
 ;
 
-function initSessionVariables(conf) {
-  sessionKey = conf.sessionKey;
-  sessionVariable = conf.sessionVariable;
+function sessionValidation(func) {
+  sessionValidationFunction = func;
 }
 
 function initRules(rules) {
